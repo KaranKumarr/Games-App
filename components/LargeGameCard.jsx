@@ -45,13 +45,13 @@ const styles = StyleSheet.create({
         // flexGrow: 1
     },
     title: {
-        position: 'absolute',
         color: '#fff',
+        fontWeight: 500,
         fontSize: 16,
+        position: 'absolute',
         bottom: 0,
         left: 9,
         padding: 8,
-        fontWeight: 500,
         zIndex: 50
     },
     backgroundShadow: {

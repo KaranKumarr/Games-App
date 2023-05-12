@@ -2,20 +2,27 @@ import { SafeAreaView, View, Text, Button, Pressable, Image, TextInput, FlatList
 import * as React from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import LargeGameCard from "../components/LargeGameCard";
+import SmallGameCard from "../components/SmallGameCard";
 
 export default function Home() {
 
   const [upcomingGames, setUpcomingGames] = React.useState([]);
 
+  const [topGames, setTopGames] = React.useState([]);
+
+
   const [searchBarText, setSearchBarText] = React.useState("");
 
   React.useEffect(() => {
 
-    const { results } = require('../dummyData.json');
+    const upcomingGames = require('../upcomingGames.json');
 
-    const sortedResults = results.sort((a, b) => a.suggestions_count < b.suggestions_count ? 1 : -1);
+    const sortedUpcomingGames = upcomingGames.results.sort((a, b) => a.suggestions_count < b.suggestions_count ? 1 : -1);
 
-    setUpcomingGames(sortedResults);
+    setUpcomingGames(sortedUpcomingGames);
+
+    const topGamesResult = require('../topGames.json');
+    setTopGames(topGamesResult.results);
 
   }, []);
 
@@ -24,8 +31,7 @@ export default function Home() {
   };
 
   return (
-    <View style={styles.homeScreen}>
-
+    <SafeAreaView style={styles.homeScreen}>
 
       {/* SearchBar */}
       <View style={styles.searchBarContainer}>
@@ -65,7 +71,30 @@ export default function Home() {
 
       </SafeAreaView>
 
-    </View>
+      <SafeAreaView style={styles.upcomingGames}>
+
+        <Text style={styles.upcomingGamesHeading}>Top Rated Games</Text>
+
+        <View>
+
+          <FlatList
+            data={topGames}
+            renderItem={({ item }) => <SmallGameCard item={item} />}
+            keyExtractor={item => item.id}
+            horizontal
+            pagingEnabled
+            snapToAlignment="center"
+            showsHorizontalScrollIndicator={false}
+          />
+
+
+
+        </View>
+
+      </SafeAreaView>
+
+
+    </SafeAreaView>
   );
 }
 
@@ -95,6 +124,7 @@ const styles = StyleSheet.create({
 
   upcomingGames: {
     padding: 8,
+    paddingBottom: 0,
   },
   upcomingGamesHeading: {
     color: '#fff',
