@@ -1,13 +1,26 @@
-import { View, Text, Button, Pressable, Image, TextInput, StyleSheet } from "react-native";
+import { SafeAreaView, View, Text, Button, Pressable, Image, TextInput, FlatList, StyleSheet, StatusBar } from "react-native";
 import * as React from "react";
 import Icon from "react-native-vector-icons/Ionicons";
+import LargeGameCard from "../components/LargeGameCard";
 
 export default function Home() {
 
+  const [upcomingGames, setUpcomingGames] = React.useState([]);
+
   const [searchBarText, setSearchBarText] = React.useState("");
 
+  React.useEffect(() => {
+
+    const { results } = require('../dummyData.json');
+
+    const sortedResults = results.sort((a, b) => a.suggestions_count < b.suggestions_count ? 1 : -1);
+
+    setUpcomingGames(sortedResults);
+
+  }, []);
+
   const handleSearchSubmit = async () => {
-    console.log(searchBarText);
+
   };
 
   return (
@@ -30,6 +43,26 @@ export default function Home() {
           />
         </Pressable>
       </View>
+
+      <SafeAreaView style={styles.upcomingGames}>
+
+        <Text style={styles.upcomingGamesHeading}>Releasing Soon</Text>
+
+        <View>
+
+          <FlatList
+            data={upcomingGames}
+            renderItem={({ item }) => <LargeGameCard item={item} />}
+            keyExtractor={item => item.id}
+            horizontal
+            pagingEnabled
+            snapToAlignment="center"
+            showsHorizontalScrollIndicator={false}
+          />
+
+        </View>
+
+      </SafeAreaView>
 
     </View>
   );
@@ -57,5 +90,21 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#e7e8e8',
   },
+
+  upcomingGames: {
+    padding: 8,
+  },
+  upcomingGamesHeading: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 600,
+    padding: 8
+  },
+
+  backgroundImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 12,
+  }
 
 });
