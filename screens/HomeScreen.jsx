@@ -14,7 +14,7 @@ export default function Home() {
     const { results } = require('../dummyData.json');
 
     const sortedResults = results.sort((a, b) => a.suggestions_count < b.suggestions_count ? 1 : -1);
-
+    
     setUpcomingGames(sortedResults);
 
   }, []);
@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   },
 
   searchBarContainer: {
+    paddingTop: StatusBar.currentHeight,
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row',

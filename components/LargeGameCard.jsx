@@ -9,6 +9,7 @@ const LargeGameCard = ({ item }) => {
     return (
         <View style={styles.container}>
             <Image
+                resizeMode='cover'
                 style={styles.backgroundImage}
                 source={{ uri: `${item.background_image}` }}
             />
@@ -27,6 +28,7 @@ const LargeGameCard = ({ item }) => {
 const styles = StyleSheet.create({
 
     container: {
+
         height: 200,
         flexDirection: 'row',
         margin: 8,
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 200,
         alignSelf: 'stretch',
-        borderRadius: 12,
+        borderRadius: 16,
         // flexGrow: 1
     },
     title: {
