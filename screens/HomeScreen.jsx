@@ -14,7 +14,7 @@ export default function Home() {
     const { results } = require('../dummyData.json');
 
     const sortedResults = results.sort((a, b) => a.suggestions_count < b.suggestions_count ? 1 : -1);
-    
+
     setUpcomingGames(sortedResults);
 
   }, []);
@@ -25,6 +25,7 @@ export default function Home() {
 
   return (
     <View style={styles.homeScreen}>
+
 
       {/* SearchBar */}
       <View style={styles.searchBarContainer}>
