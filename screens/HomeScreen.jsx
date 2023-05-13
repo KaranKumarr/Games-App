@@ -1,98 +1,158 @@
-import { SafeAreaView, View, Text, Button, Pressable, Image, TextInput, FlatList, StyleSheet, StatusBar } from "react-native";
+import { SafeAreaView, View, Text, Button, Pressable, Image, TextInput, FlatList, StyleSheet, StatusBar, ScrollView, Platform } from "react-native";
 import * as React from "react";
+import moment from "moment";
 import Icon from "react-native-vector-icons/Ionicons";
 import LargeGameCard from "../components/LargeGameCard";
 import SmallGameCard from "../components/SmallGameCard";
+import { REACT_APP_RAWG_KEY } from "@env";
+import axios from "../api/axios";
 
-export default function Home() {
-
-  const [upcomingGames, setUpcomingGames] = React.useState([]);
-
-  const [topGames, setTopGames] = React.useState([]);
-
+export default function Home({ navigation }) {
 
   const [searchBarText, setSearchBarText] = React.useState("");
+  const [upcomingGames, setUpcomingGames] = React.useState([]);
+  const [topGames, setTopGames] = React.useState([]);
+  const [genres, setGenres] = React.useState([]);
 
   React.useEffect(() => {
 
-    const upcomingGames = require('../upcomingGames.json');
+    const fetchData = async () => {
 
-    const sortedUpcomingGames = upcomingGames.results.sort((a, b) => a.suggestions_count < b.suggestions_count ? 1 : -1);
+      // dates to get coming soon games
+      const currentDate = moment().format('YYYY-MM-DD');
+      const oneMonthLater = moment().add(1, 'months').format('YYYY-MM-DD');
 
-    setUpcomingGames(sortedUpcomingGames);
+      try {
+        const upcomingGames = await axios.get('/games', {
+          params: {
+            key: REACT_APP_RAWG_KEY,
+            page: 1,
+            page_size: 5,
+            ordering: '-release',
+            exclude_additions: true,
+            dates: currentDate + ',' + oneMonthLater
+          }
+        });
 
-    const topGamesResult = require('../topGames.json');
-    setTopGames(topGamesResult.results);
+        // Sorting upcoming games by suggestion count
+        const sortedUpcomingGames = upcomingGames.data.results.sort((a, b) => a.suggestions_count < b.suggestions_count ? 1 : -1);
+
+
+        const topGamesResult = await axios.get('/games', {
+          params: {
+            key: REACT_APP_RAWG_KEY,
+            page: 1,
+            page_size: 20,
+            ordering: '-rating',
+            exclude_additions: true,
+            metacritic: '90,100'
+          }
+        });
+
+        const genresResult = await axios.get('/genres', {
+          params: {
+            key: REACT_APP_RAWG_KEY,
+            ordering: 'name'
+          }
+        });
+
+        setTopGames(topGamesResult.data.results);
+        setUpcomingGames(sortedUpcomingGames);
+        setGenres(genresResult.data.results);
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
 
   }, []);
 
   const handleSearchSubmit = async () => {
-
+    console.log(Platform.OS);
   };
 
   return (
     <SafeAreaView style={styles.homeScreen}>
+      <ScrollView>
+        {/* SearchBar */}
+        <View style={styles.searchBarContainer}>
 
-      {/* SearchBar */}
-      <View style={styles.searchBarContainer}>
-        <TextInput
-          defaultValue={searchBarText}
-          onChangeText={(newText) => { setSearchBarText(newText); }}
-          style={styles.searchBarInput}
-          placeholder="Search games"
-          placeholderTextColor={'rgba(255, 255, 255, 0.4)'}
-        />
-        <Pressable onPress={handleSearchSubmit}>
-          <Icon
-            name="ios-search"
-            color="#e7e8e8"
-            size={24}
+          <TextInput
+            defaultValue={searchBarText}
+            onChangeText={(newText) => { setSearchBarText(newText); }}
+            style={styles.searchBarInput}
+            placeholder="Search games"
+            placeholderTextColor={'rgba(255, 255, 255, 0.4)'}
           />
-        </Pressable>
-      </View>
 
-      <SafeAreaView style={styles.upcomingGames}>
-
-        <Text style={styles.upcomingGamesHeading}>Releasing Soon</Text>
-
-        <View>
-
-          <FlatList
-            data={upcomingGames}
-            renderItem={({ item }) => <LargeGameCard item={item} />}
-            keyExtractor={item => item.id}
-            horizontal
-            pagingEnabled
-            snapToAlignment="center"
-            showsHorizontalScrollIndicator={false}
-          />
+          <Pressable onPress={handleSearchSubmit}>
+            <Icon
+              name="ios-search"
+              color="#e7e8e8"
+              size={24} />
+          </Pressable>
 
         </View>
 
-      </SafeAreaView>
+        {/* Releasing Soon Section */}
+        <SafeAreaView style={styles.gamesSection}>
 
-      <SafeAreaView style={styles.upcomingGames}>
+          <Text style={styles.gamesSectionHeading}>Releasing Soon</Text>
 
-        <Text style={styles.upcomingGamesHeading}>Top Rated Games</Text>
+          <View>
 
-        <View>
+            <FlatList
+              data={upcomingGames}
+              renderItem={({ item }) => <LargeGameCard navigation={navigation} item={item} />}
+              keyExtractor={item => item.id}
+              horizontal
+              pagingEnabled
+              snapToAlignment="center"
+              showsHorizontalScrollIndicator={false}
+            />
 
-          <FlatList
-            data={topGames}
-            renderItem={({ item }) => <SmallGameCard item={item} />}
-            keyExtractor={item => item.id}
-            horizontal
-            pagingEnabled
-            snapToAlignment="center"
-            showsHorizontalScrollIndicator={false}
-          />
+          </View>
 
+        </SafeAreaView>
 
+        {/* Top Rated Games Section */}
+        <SafeAreaView style={styles.gamesSection}>
 
-        </View>
+          <Text style={styles.gamesSectionHeading}>Top Rated Games</Text>
 
-      </SafeAreaView>
+          <View>
 
+            <FlatList
+              data={topGames}
+              renderItem={({ item }) => <SmallGameCard item={item} />}
+              keyExtractor={item => item.id}
+              horizontal
+              pagingEnabled
+              snapToAlignment="center"
+              showsHorizontalScrollIndicator={false}
+            />
+
+          </View>
+
+        </SafeAreaView>
+
+        <Text style={styles.gamesSectionHeading}>Genres</Text>
+
+        {/* Genres Section */}
+        <SafeAreaView style={styles.genres}>
+
+          {genres.map((item, i) => {
+            return (
+              <View style={styles.genreCard} key={i}>
+                <Text style={styles.genreTitle} >{item.name}</Text>
+              </View>);
+          })}
+
+        </SafeAreaView>
+
+      </ScrollView>
 
     </SafeAreaView>
   );
@@ -102,7 +162,6 @@ const styles = StyleSheet.create({
 
   homeScreen: {
     backgroundColor: '#0B1416',
-    // flex: '1 1 0%';
     flexGrow: 1
   },
 
@@ -122,21 +181,35 @@ const styles = StyleSheet.create({
     color: '#e7e8e8',
   },
 
-  upcomingGames: {
+  gamesSection: {
     padding: 8,
     paddingBottom: 0,
   },
-  upcomingGamesHeading: {
+  gamesSectionHeading: {
     color: '#fff',
     fontSize: 24,
     fontWeight: 600,
     padding: 8
   },
 
-  backgroundImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 12,
+  genres: {
+    paddingHorizontal: 8,
+    paddingBottom: 16,
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8
+  },
+  genreCard: {
+    backgroundColor: '#232c2d',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 8
+  },
+  genreTitle: {
+    color: '#fff',
+    fontSize: 16,
+    textTransform: 'capitalize'
   }
 
 });

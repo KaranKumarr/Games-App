@@ -1,34 +1,38 @@
-import { Image, View, Text, StyleSheet, Dimensions } from 'react-native';
+import { Image, View, Text, StyleSheet, Dimensions, Pressable } from 'react-native';
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const LargeGameCard = ({ item }) => {
+const LargeGameCard = ({ item, navigation }) => {
 
-    // const windowWidth = Dimensions.get('window').width;
 
     return (
-        <View style={styles.container}>
-            <Image
-                resizeMode='cover'
-                style={styles.backgroundImage}
-                source={{ uri: `${item.background_image}` }}
-            />
-            <Text style={styles.title}>{item.name}</Text>
-            <LinearGradient
-                style={styles.backgroundShadow}
-                colors={['rgba(0,0,0,0.03)', 'rgba(0,0,0,0.02)', 'rgba(0,0,0,0.01)', 'rgba(0,0,0,0.75)']}
-            >
+        <Pressable
+            onPress={() =>
+                navigation.navigate('Game', { name: 'Jane', id: item.id })
+            }
+        >
+            <View
+                style={styles.container}>
+                <Image
+                    resizeMode='cover'
+                    style={styles.backgroundImage}
+                    source={{ uri: `${item.background_image}` }}
+                />
+                <Text style={styles.title}>{item.name}</Text>
+                <LinearGradient
+                    style={styles.backgroundShadow}
+                    colors={['rgba(0,0,0,0.03)', 'rgba(0,0,0,0.02)', 'rgba(0,0,0,0.01)', 'rgba(0,0,0,0.75)']}
+                >
 
-            </LinearGradient>
-        </View >
-
+                </LinearGradient>
+            </View>
+        </Pressable>
     );
 };
 
 const styles = StyleSheet.create({
 
     container: {
-
         height: 200,
         flexDirection: 'row',
         margin: 8,
