@@ -1,18 +1,23 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import React from 'react';
 
-const SmallGameCard = ({ item }) => {
+const SmallGameCard = ({ item, navigation }) => {
     return (
-        <View style={styles.container}>
-            <Image
-                resizeMode='cover'
-                style={styles.backgroundImage}
-                source={{ uri: `${item.background_image}` }}
-            />
-            <Text
-                style={styles.title}
-            >{item.name}</Text>
-        </View>
+        <Pressable
+            onPress={() => navigation.navigate('Game', { screenshots: item.short_screenshots, id: item.id })}
+        >
+            <View style={styles.container}>
+                <Image
+                    resizeMode='cover'
+                    style={styles.backgroundImage}
+                    source={{ uri: `${item.background_image}` }}
+                />
+                <Text
+                    style={styles.title}
+                >{item.name}</Text>
+            </View>
+        </Pressable>
+
     );
 };
 

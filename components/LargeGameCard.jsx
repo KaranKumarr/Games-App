@@ -8,7 +8,7 @@ const LargeGameCard = ({ item, navigation }) => {
     return (
         <Pressable
             onPress={() =>
-                navigation.navigate('Game', { name: 'Jane', id: item.id })
+                navigation.navigate('Game', { screenshots: item.short_screenshots, id: item.id })
             }
         >
             <View

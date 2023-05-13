@@ -126,7 +126,7 @@ export default function Home({ navigation }) {
 
             <FlatList
               data={topGames}
-              renderItem={({ item }) => <SmallGameCard item={item} />}
+              renderItem={({ item }) => <SmallGameCard item={item} navigation={navigation} />}
               keyExtractor={item => item.id}
               horizontal
               pagingEnabled
