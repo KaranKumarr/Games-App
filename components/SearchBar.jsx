@@ -9,10 +9,13 @@ const SearchBar = ({ navigation }) => {
 
     const handleSearchSubmit = async () => {
 
+        const search = searchBarText;
+        setSearchBarText("");
+
         navigation.navigate('Search', {
             query: {
                 type: 'search',
-                query: searchBarText
+                query: search
             }
         });
 

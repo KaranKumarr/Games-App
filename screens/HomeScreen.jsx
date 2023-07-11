@@ -1,4 +1,4 @@
-import { SafeAreaView, View, Text, Button, Pressable, Image, TextInput, FlatList, StyleSheet, StatusBar, ScrollView, Platform } from "react-native";
+import { SafeAreaView, View, Text, Button, Pressable, Image, TextInput, FlatList, StyleSheet, StatusBar, ScrollView, Platform, TouchableOpacity } from "react-native";
 import * as React from "react";
 import moment from "moment";
 import SearchBar from "../components/SearchBar";
@@ -125,9 +125,16 @@ export default function Home({ navigation }) {
 
           {genres.map((item, i) => {
             return (
-              <View style={styles.genreCard} key={i}>
+              <TouchableOpacity onPress={() => {
+                navigation.navigate('Search', {
+                  query: {
+                    type: 'genre',
+                    query: item.id
+                  }
+                });
+              }} style={styles.genreCard} key={i}>
                 <Text style={styles.genreTitle} >{item.name}</Text>
-              </View>);
+              </TouchableOpacity>);
           })}
 
         </SafeAreaView>

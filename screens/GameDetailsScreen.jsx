@@ -123,7 +123,14 @@ const GameDetailsScreen = ({ navigation, route }) => {
                             <View style={styles.gamePlatformLinkSection}>
                                 {gameDetails.platforms?.map((item, i) => {
                                     return (
-                                        <Pressable key={item.platform.id} onPress={() => { console.log(item.platform.name); }}>
+                                        <Pressable key={item.platform.id} onPress={() => {
+                                            navigation.navigate('Search', {
+                                                query: {
+                                                    type: 'platform',
+                                                    query: item.platform.id
+                                                }
+                                            });
+                                        }}>
                                             <Text style={styles.gamePlatformLink}>
                                                 {item.platform.name}{i === gameDetails.platforms.length - 1 ? '' : ','}
                                             </Text>

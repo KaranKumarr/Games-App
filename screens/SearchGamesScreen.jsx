@@ -14,9 +14,6 @@ const SearchGamesScreen = ({ navigation, route }) => {
 
     useEffect(() => {
 
-        console.log(query);
-
-
         const fetchData = async () => {
 
             params = {
@@ -35,6 +32,22 @@ const SearchGamesScreen = ({ navigation, route }) => {
                     search_precise: true,
                     search: query.query
                 };
+            } else if (query.type === 'genre') {
+                params = {
+                    key: REACT_APP_RAWG_KEY,
+                    page: 1,
+                    page_size: 20,
+                    exclude_additions: true,
+                    genres: query.query
+                };
+            } else if (query.type === 'platform') {
+                params = {
+                    key: REACT_APP_RAWG_KEY,
+                    page: 1,
+                    page_size: 20,
+                    exclude_additions: true,
+                    platforms: query.query
+                };
             }
 
             try {
@@ -43,7 +56,6 @@ const SearchGamesScreen = ({ navigation, route }) => {
                     params: params
                 });
 
-                console.log(data.results[0].name);
 
 
                 // Sorting upcoming games by suggestion count
@@ -52,16 +64,12 @@ const SearchGamesScreen = ({ navigation, route }) => {
 
                 setGames(sortedUpcomingGames);
 
-                console.log(games.length);
-
             } catch (error) {
                 console.log(error);
             }
         };
 
         fetchData();
-
-        // console.log(games);
 
     }, [query]);
 
