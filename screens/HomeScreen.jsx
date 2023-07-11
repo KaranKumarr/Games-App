@@ -1,7 +1,7 @@
 import { SafeAreaView, View, Text, Button, Pressable, Image, TextInput, FlatList, StyleSheet, StatusBar, ScrollView, Platform } from "react-native";
 import * as React from "react";
 import moment from "moment";
-import Icon from "react-native-vector-icons/Ionicons";
+import SearchBar from "../components/SearchBar";
 import LargeGameCard from "../components/LargeGameCard";
 import SmallGameCard from "../components/SmallGameCard";
 import { REACT_APP_RAWG_KEY } from "@env";
@@ -9,7 +9,6 @@ import axios from "../api/axios";
 
 export default function Home({ navigation }) {
 
-  const [searchBarText, setSearchBarText] = React.useState("");
   const [upcomingGames, setUpcomingGames] = React.useState([]);
   const [topGames, setTopGames] = React.useState([]);
   const [genres, setGenres] = React.useState([]);
@@ -69,32 +68,13 @@ export default function Home({ navigation }) {
 
   }, []);
 
-  const handleSearchSubmit = async () => {
-    console.log(Platform.OS);
-  };
 
   return (
     <SafeAreaView style={styles.homeScreen}>
       <ScrollView>
-        {/* SearchBar */}
-        <View style={styles.searchBarContainer}>
 
-          <TextInput
-            defaultValue={searchBarText}
-            onChangeText={(newText) => { setSearchBarText(newText); }}
-            style={styles.searchBarInput}
-            placeholder="Search games"
-            placeholderTextColor={'rgba(255, 255, 255, 0.4)'}
-          />
+        <SearchBar navigation={navigation} />
 
-          <Pressable onPress={handleSearchSubmit}>
-            <Icon
-              name="ios-search"
-              color="#e7e8e8"
-              size={24} />
-          </Pressable>
-
-        </View>
 
         {/* Releasing Soon Section */}
         <SafeAreaView style={styles.gamesSection}>
@@ -165,21 +145,6 @@ const styles = StyleSheet.create({
     flexGrow: 1
   },
 
-  searchBarContainer: {
-    paddingTop: StatusBar.currentHeight,
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    backgroundColor: '#232c2d',
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#3c4345'
-  },
-
-  searchBarInput: {
-    fontSize: 20,
-    color: '#e7e8e8',
-  },
 
   gamesSection: {
     padding: 8,

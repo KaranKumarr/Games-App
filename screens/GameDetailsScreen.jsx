@@ -171,8 +171,6 @@ const GameDetailsScreen = ({ navigation, route }) => {
                             </View>
                         </View>
 
-
-
                     </View>
 
                 </ScrollView>

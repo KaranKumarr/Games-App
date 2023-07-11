@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
 import { StatusBar } from 'expo-status-bar';
 import GameDetailsScreen from './screens/GameDetailsScreen';
+import SearchGamesScreen from './screens/SearchGamesScreen';
 
 export default function App() {
 
@@ -23,6 +24,10 @@ export default function App() {
         <Stack.Screen
           name='Game'
           component={GameDetailsScreen}
+        />
+        <Stack.Screen
+          name='Search'
+          component={SearchGamesScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
