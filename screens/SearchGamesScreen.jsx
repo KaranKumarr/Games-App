@@ -13,16 +13,13 @@ const SearchGamesScreen = ({ navigation, route }) => {
     const query = (route.params.query);
 
     useEffect(() => {
-
         const fetchData = async () => {
-
             params = {
                 key: REACT_APP_RAWG_KEY,
                 page: 1,
                 page_size: 20,
                 exclude_additions: true,
             };
-
             if (query.type === 'search') {
                 params = {
                     key: REACT_APP_RAWG_KEY,
@@ -51,19 +48,13 @@ const SearchGamesScreen = ({ navigation, route }) => {
             }
 
             try {
-
                 const { data } = await axios.get('/games', {
                     params: params
                 });
 
-
-
                 // Sorting upcoming games by suggestion count
                 const sortedUpcomingGames = data.results.sort((a, b) => a.ratings_count < b.ratings_count ? 1 : -1);
-
-
                 setGames(sortedUpcomingGames);
-
             } catch (error) {
                 console.log(error);
             }

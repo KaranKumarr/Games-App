@@ -15,9 +15,7 @@ const GameDetailsScreen = ({ navigation, route }) => {
     const gameId = route.params.id;
 
     useEffect(() => {
-
         const fetchData = async () => {
-
             try {
                 const { data } = await axios.get(`/games/${gameId}`, {
                     params: {
@@ -32,14 +30,20 @@ const GameDetailsScreen = ({ navigation, route }) => {
             }
 
         };
-
         fetchData();
-
     }, []);
 
     const date = moment(gameDetails.released).format('DD-MMM-YYYY');
 
-
+    const handleSearchSubmit = async (genreSelect) => {
+        const genre = genreSelect;
+        navigation.navigate('Search', {
+            query: {
+                type: 'genre',
+                query: genre
+            }
+        });
+    };
 
     return (
         <>
@@ -153,7 +157,9 @@ const GameDetailsScreen = ({ navigation, route }) => {
 
                                 {gameDetails.genres?.map((item, i) => {
                                     return (
-                                        <Pressable style={styles.genreCard} key={i}>
+                                        <Pressable onPress={() => {
+                                            handleSearchSubmit(item.name.toLowerCase());
+                                        }} style={styles.genreCard} key={i}>
                                             <Text style={styles.genreTitle} >{item.name}</Text>
                                         </Pressable>);
                                 })}
